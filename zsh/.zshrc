@@ -126,15 +126,6 @@ function h() {
     fi
 }
 
-
-function clear_three_quarters() {
-    lines=$(tput lines)
-    tput cup $((lines/4)) 0
-    tput ed
-}
-alias cl='clear_three_quarters'
-
-
 # $ saved_status=$(tmux_run_and_notify your_long_running_command)
 function tmux_run_and_notify() {
   local initial_status=$(tmux show-option -gv status-right)
