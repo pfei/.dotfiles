@@ -135,6 +135,39 @@ function clear_three_quarters() {
 alias cl='clear_three_quarters'
 
 
+# $ saved_status=$(tmux_run_and_notify your_long_running_command)
+function tmux_run_and_notify() {
+  local initial_status=$(tmux show-option -gv status-right)
+  local start_time=$(date +%s)
+
+  # Run the command
+  "$@"
+
+  # Calculate duration
+  local end_time=$(date +%s)
+  local duration=$((end_time - start_time))
+
+  # Update status bar with completion message
+  tmux set-option -g status-right\
+  "#[fg=yellow,bold]Command completed in ${duration}s at $(date +%H:%M:%S)#[default]"
+
+  # Return the initial status
+  echo "$initial_status"
+}
+alias trn='tmux_run_and_notify'
+
+# $ tmux_restore_status "$saved_status"
+function tmux_restore_status() {
+  if [[ -n "$1" ]]; then
+    tmux set-option -g status-right "$1"
+    echo "Tmux status-right restored."
+  else
+    echo "Error: No status provided to restore."
+  fi
+}
+alias trs='tmux_restore_status'
+
+
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
