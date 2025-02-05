@@ -126,24 +126,27 @@ function h() {
     fi
 }
 
-# $ saved_status=$(tmux_run_and_notify your_long_running_command)
 function tmux_run_and_notify() {
   local initial_status=$(tmux show-option -gv status-right)
   local start_time=$(date +%s)
 
-  # Run the command
-  "$@"
+  # Run the command and capture its output
+  local command_output
+  command_output=$("$@")
+  local command_exit_status=$?
 
   # Calculate duration
   local end_time=$(date +%s)
   local duration=$((end_time - start_time))
 
   # Update status bar with completion message
-  tmux set-option -g status-right\
+  tmux set-option -g status-right \
   "#[fg=yellow,bold]Command completed in ${duration}s at $(date +%H:%M:%S)#[default]"
 
-  # Return the initial status
+  # Return the initial status (this will be captured by the caller)
   echo "$initial_status"
+
+  return $command_exit_status
 }
 alias trn='tmux_run_and_notify'
 
