@@ -161,6 +161,14 @@ function tmux_restore_status() {
 }
 alias trs='tmux_restore_status'
 
+function lsym() {
+    local maxdepth=${1:-1} # first argument if provided, otherwise defaults to 1
+    find . -maxdepth $maxdepth -type l -printf '%p -> %l\n' | while read line; do
+        symlink=$(echo "$line" | cut -d' ' -f1)
+        target=$(echo "$line" | cut -d' ' -f3-)
+        echo -e "\033[36m$symlink\033[0m -> $target"
+    done
+}
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
