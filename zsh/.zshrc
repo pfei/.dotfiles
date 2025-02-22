@@ -170,6 +170,10 @@ function lsym() {
     done
 }
 
+function lst() {
+  ls -t --color=always | head -n ${1:-5}
+}
+
 
 export TMUX_TIME_FORMAT="| %H:%M |"
 
