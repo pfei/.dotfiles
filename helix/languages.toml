@@ -3,9 +3,11 @@ command = "ruff"
 args = ["server"]
 
 [language-server.ruff.config.settings]
-lint.select = ["I"]
+lint.select = ["E", "F", "I"]
 lint.fixAll = true
 format.preview = true
+codeAction.fixAll.enable = true
+codeAction.organizeImports.enable = true
 
 [language-server.jedi-language-server]
 command = "jedi-language-server"
@@ -24,8 +26,14 @@ formatter = { command = "mdformat", args = ["-"] }
 [[language]]
 name = "python"
 auto-format = true
-formatter = { command = "sh", args = ["-c", "ruff check --select I --fix --unsafe-fixes - | ruff format -"] }
 language-servers = ["ruff", "jedi-language-server"]
+
+[language.formatter]
+command = "sh"
+args = [
+  "-c",
+  "tmp=$(mktemp --suffix=.py) && cat > $tmp && ruff check --select I --fix --unsafe-fixes $tmp >/dev/null 2>&1 ; ruff format --quiet $tmp >/dev/null 2>&1 && cat $tmp && rm $tmp"
+]
 
 [language.debugger]
 name = "debugpy"

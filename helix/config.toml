@@ -19,3 +19,6 @@ git-ignore = false
 n = [":set gutters.layout [\"diagnostics\",\"spacer\",\"diff\"]"]
 # 'space + l' pour réafficher les numéros (l comme "Line numbers")
 l = [":set gutters.layout [\"diagnostics\",\"line-numbers\",\"spacer\",\"diff\"]"]
+
+[editor.lsp]
+display-messages = true
