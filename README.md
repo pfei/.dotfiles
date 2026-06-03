@@ -72,6 +72,7 @@ Essential for general workflows and compiling isolated Python environments with 
 ```bash
 sudo apt update && sudo apt install -y \
 curl git zsh tmux kitty xclip yad shfmt \
+fonts-noto-color-emoji \
 build-essential libssl-dev zlib1g-dev libbz2-dev \
 libreadline-dev libsqlite3-dev libncursesw5-dev \
 xz-utils tk-dev libxml2-dev libxmlsec1-dev \
@@ -139,6 +140,7 @@ Clone the repository anywhere:
 ```bash
 git clone https://github.com/pfei/dotfiles.git ~/src/dotfiles
 cd ~/src/dotfiles
+git submodule update --init
 ./install.py
 ```
 
