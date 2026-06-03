@@ -1,4 +1,6 @@
-theme = "my_mocha"
+# theme = "dracula"
+# theme = "my_mocha"
+theme = "dracula"
 
 [editor]
 line-number = "absolute"

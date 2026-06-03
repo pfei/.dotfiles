@@ -24,41 +24,53 @@ def main():
         source = dotfiles_dir / filename
         target = helix_config_dir / filename
 
-        if source.exists():
-            if source.is_symlink():
-                continue
+        if not source.exists():
+            continue
 
-            if target.is_symlink() or target.exists():
-                target.unlink()
-            target.symlink_to(source)
-            print(f"✅ Linked configuration: {filename}")
+        if target.exists() or target.is_symlink():
+            target.unlink()
+
+        target.symlink_to(source)
+        print(f"✅ Linked configuration: {filename}")
+
+    # 2b. Link themes directory
+    themes_source = dotfiles_dir / "themes"
+    themes_target = helix_config_dir / "themes"
+
+    if themes_source.exists():
+        if themes_target.exists() or themes_target.is_symlink():
+            # safe removal (dir vs file vs symlink)
+            if themes_target.is_dir() and not themes_target.is_symlink():
+                shutil.rmtree(themes_target)
+            else:
+                themes_target.unlink()
+
+        themes_target.symlink_to(themes_source)
+        print("✅ Linked Helix themes")
+    else:
+        print("⚠️ No themes directory found in dotfiles, skipping.")
 
     # 3. Handle Helix Binary / AppImage setup according to the environment
     local_bin_dir = Path.home() / ".local" / "bin"
     hx_target = local_bin_dir / "hx"
 
-    # Detect headless environment (same logic as global install.py)
     is_headless = not (os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY"))
-
     appimages = list(local_bin_dir.glob("helix-*-x86_64.AppImage"))
 
     if appimages:
         target_appimage = sorted(appimages)[-1]
 
         if is_headless:
-            # --- VPS / HEADLESS MODE ---
             print(
-                "🖥️  Headless environment detected: Setting up extracted AppImage wrapper..."
+                "🖥️ Headless environment detected: Setting up extracted AppImage wrapper..."
             )
 
             dist_dir = local_bin_dir / "helix-dist"
             dist_dir.mkdir(parents=True, exist_ok=True)
 
-            # Extract AppImage if squashfs-root doesn't exist yet
             squashfs_root = dist_dir / "squashfs-root"
             if not squashfs_root.exists():
                 print(f"📦 Extracting {target_appimage.name} into helix-dist...")
-                # Run extraction inside helix-dist to match your workflow
                 subprocess.run(
                     [str(target_appimage), "--appimage-extract"],
                     cwd=str(dist_dir),
@@ -66,27 +78,24 @@ def main():
                     check=True,
                 )
 
-            # Remove any existing symlink or old wrapper at hx_target
-            if hx_target.is_symlink() or hx_target.exists():
+            if hx_target.exists() or hx_target.is_symlink():
                 hx_target.unlink()
 
-            # Create your tailored Bash wrapper script
             wrapper_content = f"""#!/bin/bash
 export HELIX_RUNTIME="$HOME/.local/bin/helix-dist/squashfs-root/usr/lib/helix/runtime"
 exec "$HOME/.local/bin/helix-dist/squashfs-root/AppRun" "$@"
 """
             hx_target.write_text(wrapper_content)
             hx_target.chmod(0o755)
+
             print("✅ Created and optimized Helix FUSE-less wrapper script.")
 
         else:
-            # --- LOCAL PC / GUI MODE ---
             print("💻 Desktop environment detected: Using direct AppImage symlink...")
-            if hx_target.is_symlink() or hx_target.exists():
+
+            if hx_target.exists() or hx_target.is_symlink():
                 if hx_target.is_file() and not hx_target.is_symlink():
-                    print(
-                        f"⚠️  Warning: {hx_target} is a real file. Skipping symlink creation."
-                    )
+                    print(f"⚠️ {hx_target} is a real file. Skipping symlink creation.")
                     return
                 hx_target.unlink()
 
@@ -94,11 +103,10 @@ exec "$HOME/.local/bin/helix-dist/squashfs-root/AppRun" "$@"
             print(f"✅ Helix symlinked: {target_appimage.name} → hx")
 
     else:
-        # Fallback if no AppImage is found
         if shutil.which("hx") or hx_target.exists():
             print("✅ Helix binary (hx) or wrapper is already present.")
         else:
-            print("⚠️  No Helix AppImage found in ~/.local/bin. Skipping hx setup.")
+            print("⚠️ No Helix AppImage found in ~/.local/bin. Skipping hx setup.")
 
 
 if __name__ == "__main__":
