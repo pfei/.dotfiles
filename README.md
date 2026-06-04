@@ -111,6 +111,19 @@ curl https://pyenv.run | bash
 > eval "$(pyenv init -)"
 > ```
 
+```bash
+# NVM (Node Version Manager)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+```
+
+> ⚠️ The NVM installer will append source lines to your `.zshrc`.
+> **Remove them** — NVM lazy loading is already handled in `exports.zsh`.
+> After install, just reload your shell:
+>
+> ```bash
+> omz reload
+> ```
+
 ### 3. Server Configuration (Optional)
 
 If setting up a headless environment / VPS, flag the machine as a server.

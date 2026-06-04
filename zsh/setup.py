@@ -40,6 +40,20 @@ fi
     else:
         print("ℹ️  load_google_api_key already exists, skipping.")
 
+    # 3. Check NVM installation
+    nvm_dir = Path.home() / ".nvm"
+    nvm_sh = nvm_dir / "nvm.sh"
+    if nvm_sh.exists():
+        print("✅ NVM detected: ~/.nvm/nvm.sh found.")
+    else:
+        print("⚠️  NVM not found at ~/.nvm")
+        print(
+            "   Run: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash"
+        )
+        print(
+            "   Then remove the 3 lines it appends to ~/.zshrc — lazy loading is in exports.zsh."
+        )
+
 
 if __name__ == "__main__":
     main()
