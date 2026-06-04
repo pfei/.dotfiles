@@ -124,6 +124,15 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
 > omz reload
 > ```
 
+```bash
+# TypeScript LSP (after NVM + Node are installed)
+npm install -g typescript typescript-language-server
+```
+
+> The `install.py` script automatically symlinks `typescript-language-server`
+> from the active NVM Node version into `~/.local/bin` so Helix can find it
+> without loading NVM at startup.
+
 ### 3. Server Configuration (Optional)
 
 If setting up a headless environment / VPS, flag the machine as a server.

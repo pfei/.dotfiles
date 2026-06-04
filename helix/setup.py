@@ -108,6 +108,34 @@ exec "$HOME/.local/bin/helix-dist/squashfs-root/AppRun" "$@"
         else:
             print("⚠️ No Helix AppImage found in ~/.local/bin. Skipping hx setup.")
 
+    # 4. Symlink typescript-language-server from active NVM node version
+    nvm_dir = Path.home() / ".nvm"
+    local_bin_dir.mkdir(parents=True, exist_ok=True)
+    tsls_target = local_bin_dir / "typescript-language-server"
+
+    if nvm_dir.exists():
+        # Find the highest installed node version
+        versions_dir = nvm_dir / "versions" / "node"
+        node_versions = sorted(versions_dir.glob("v*")) if versions_dir.exists() else []
+        if node_versions:
+            active_version = node_versions[-1]
+            tsls_source = active_version / "bin" / "typescript-language-server"
+            if tsls_source.exists():
+                if tsls_target.exists() or tsls_target.is_symlink():
+                    tsls_target.unlink()
+                tsls_target.symlink_to(tsls_source)
+                print(f"✅ Linked typescript-language-server ({active_version.name})")
+            else:
+                print("⚠️  typescript-language-server not found in NVM node version.")
+                print("   Run: npm install -g typescript typescript-language-server")
+        else:
+            print("⚠️  NVM installed but no Node version found.")
+            print("   Run: nvm install --lts && ")
+            print("npm install -g typescript typescript-language-server")
+    else:
+        print("⚠️  NVM not found — skipping typescript-language-server symlink.")
+        print("   See README: Manual Prerequisites > NVM")
+
 
 if __name__ == "__main__":
     main()
