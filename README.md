@@ -84,10 +84,32 @@ libffi-dev liblzma-dev
 ```bash
 # Oh My Zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
 
+> ⚠️ The Oh My Zsh installer drops you into a temporary zsh session on completion.
+> Type `exit` to return to bash, then set zsh as your default shell:
+>
+> ```bash
+> chsh -s $(which zsh)
+> ```
+>
+> Then **log out and log back in** — closing the terminal is not enough.
+> A full session restart is required for the default shell change to take effect.
+
+```bash
 # Pyenv & plugins
 curl https://pyenv.run | bash
 ```
+
+> ⚠️ pyenv is not available yet in the current session after installation.
+> Either open a new terminal (if zsh is already your default shell),
+> or manually bootstrap it for the current session:
+>
+> ```bash
+> export PYENV_ROOT="$HOME/.pyenv"
+> export PATH="$PYENV_ROOT/bin:$PATH"
+> eval "$(pyenv init -)"
+> ```
 
 ### 3. Server Configuration (Optional)
 
@@ -132,6 +154,11 @@ The installation script automatically:
 - detects the AppImage,
 - creates symlinks,
 - and extracts it on headless systems when FUSE is unavailable.
+
+> 💡 **Expected shell state before running `install.py`:**
+> zsh is your active default shell (verify with `echo $SHELL`),
+> and pyenv responds to `pyenv --version`.
+> If either is missing, revisit the steps above before continuing.
 
 ## ⚙️ Installation
 
@@ -369,4 +396,4 @@ ______________________________________________________________________
 
 MIT License — see LICENSE for details.
 
-Last updated: May 2026
+Last updated: June 2026
