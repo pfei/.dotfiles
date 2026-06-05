@@ -128,6 +128,16 @@ exec "$HOME/.local/bin/helix-dist/squashfs-root/AppRun" "$@"
             else:
                 print("⚠️  typescript-language-server not found in NVM node version.")
                 print("   Run: npm install -g typescript typescript-language-server")
+            # node must also be in PATH for typescript-language-server to run
+            node_source = active_version / "bin" / "node"
+            node_target = local_bin_dir / "node"
+            if node_source.exists():
+                if node_target.exists() or node_target.is_symlink():
+                    node_target.unlink()
+                node_target.symlink_to(node_source)
+                print(f"✅ Linked node ({active_version.name})")
+            else:
+                print("⚠️  node binary not found in NVM version.")
         else:
             print("⚠️  NVM installed but no Node version found.")
             print("   Run: nvm install --lts && ")
