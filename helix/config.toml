@@ -24,3 +24,7 @@ l = [":set gutters.layout [\"diagnostics\",\"line-numbers\",\"spacer\",\"diff\"]
 
 [editor.lsp]
 display-messages = true
+
+[keys.normal]
+A-h = ":buffer-previous"
+A-l = ":buffer-next"
