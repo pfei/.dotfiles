@@ -11,6 +11,7 @@ codeAction.organizeImports.enable = true
 
 [language-server.jedi-language-server]
 command = "jedi-language-server"
+config.workspace.environmentPath = ".venv/bin/python"
 
 [[language]]
 name = "bash"
