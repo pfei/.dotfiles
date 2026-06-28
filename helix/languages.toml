@@ -71,11 +71,13 @@ includeInlayFunctionLikeReturnTypeHints = true
 name = "typescript"
 language-servers = ["typescript-language-server"]
 auto-format = true
+formatter = { command = "prettier", args = ["--parser", "typescript"] }
 
 [[language]]
 name = "tsx"
 language-servers = ["typescript-language-server"]
 auto-format = true
+formatter = { command = "prettier", args = ["--parser", "babel-ts"] }
 
 [language-server.gopls]
 command = "gopls"
