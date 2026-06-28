@@ -76,3 +76,68 @@ auto-format = true
 name = "tsx"
 language-servers = ["typescript-language-server"]
 auto-format = true
+
+[language-server.gopls]
+command = "gopls"
+[language-server.gopls.config.hints]
+assignVariableTypes = true
+compositeLiteralFields = true
+compositeLiteralTypes = true
+constantValues = true
+functionTypeParameters = true
+parameterNames = true
+rangeVariableTypes = true
+
+[[language]]
+name = "go"
+auto-format = true
+language-servers = ["gopls"]
+formatter = { command = "gofumpt" }
+
+[language.debugger]
+name = "go"
+transport = "stdio"
+command = "dlv"
+args = ["dap"]
+
+[[language.debugger.templates]]
+name = "source"
+request = "launch"
+completion = [{ name = "entrypoint", completion = "filename", default = "." }]
+[language.debugger.templates.args]
+mode = "debug"
+program = "{0}"
+
+[[language.debugger.templates]]
+name = "binary"
+request = "launch"
+[language.debugger.templates.args]
+mode = "exec"
+program = "{0}"
+
+[[language]]
+name = "gomod"
+auto-format = true
+language-servers = ["gopls"]
+
+[[language]]
+name = "gowork"
+auto-format = true
+language-servers = ["gopls"]
+
+[[language]]
+name = "gotmpl"
+auto-format = true
+language-servers = ["gopls"]
+
+
+[[language]]
+name = "javascript"
+language-servers = ["typescript-language-server"]
+auto-format = true
+
+[[language]]
+name = "jsx"
+language-servers = ["typescript-language-server"]
+auto-format = true
+formatter = { command = "prettier", args = ["--parser", "babel"] }
